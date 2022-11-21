@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class SelectionBehaviourScript : MonoBehaviour
 {
-    public Material selectedMaterial;
     private GameObject selectedObject;
     private Rigidbody selectedRigidbody;
-    private Material selectedObjectOriginalMaterial;
+    private Color selectedObjectOriginalMaterialColor;
     private Transform selectedObjectOriginalParentTransform;
     private bool isAnObjectSelected;
 
@@ -41,7 +40,7 @@ public class SelectionBehaviourScript : MonoBehaviour
             }
             selectedRigidbody.useGravity = false;
             if (getUserTap()) {
-                selectedObject.GetComponent<Renderer>().material = selectedObjectOriginalMaterial;
+                selectedObject.GetComponent<Renderer>().material.color = selectedObjectOriginalMaterialColor;
                 isAnObjectSelected = false;
                 selectedRigidbody.useGravity = true;
                 selectedObject.transform.parent = selectedObjectOriginalParentTransform;
@@ -51,15 +50,17 @@ public class SelectionBehaviourScript : MonoBehaviour
                 selectedObject.GetComponent<Rigidbody>().centerOfMass = new Vector3(0,0,0);
             }
         } else {
-            if (isThereAHit && hit.collider.gameObject.name != "GroundPlane") {
-                print("Got a hit: " + hit.collider.gameObject.name);
+            if (isThereAHit /*&& hit.collider.gameObject.name != "NonSelectableObjects"*/) {
+                //print("Got a hit: " + hit.collider.gameObject.name);
                 if (getUserTap()) {
-                    print("Got a tap");
+                    //print("Got a tap");
                     selectedObject = hit.collider.gameObject;
 
                     selectedRigidbody = hit.rigidbody;
-                    selectedObjectOriginalMaterial = selectedObject.GetComponent<Renderer>().material;
-                    selectedObject.GetComponent<Renderer>().material = selectedMaterial;
+                    selectedObjectOriginalMaterialColor = selectedObject.GetComponent<Renderer>().material.color;
+                    Color selectedColor = selectedObjectOriginalMaterialColor;
+                    selectedColor.a = selectedObjectOriginalMaterialColor.a - 0.4f;
+                    selectedObject.GetComponent<Renderer>().material.color = selectedColor;
                     isAnObjectSelected = true;
                     selectedRigidbody.useGravity = false;
                     selectedObjectOriginalParentTransform = selectedObject.transform.parent;
