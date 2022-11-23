@@ -73,4 +73,5 @@ crashlytics-build.properties
 
 # Vuforia
 /[Pp]ackages/com.ptc.vuforia.engine-*.tgz
+/[Aa]ssets/[Ee]ditor/
 
