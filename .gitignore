@@ -72,5 +72,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # Vuforia
-/[Pp]ackages/*
+/[Pp]ackages/*.tgz
+/[Pp]ackages/*.json
+
 
