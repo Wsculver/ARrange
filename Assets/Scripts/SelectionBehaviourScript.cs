@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vuforia;
 
 public class SelectionBehaviourScript : MonoBehaviour
 {
@@ -10,10 +11,21 @@ public class SelectionBehaviourScript : MonoBehaviour
     private Transform selectedObjectOriginalParentTransform;
     private bool isAnObjectSelected;
 
+    private float previousXKnobRotation;
+    private float previousYKnobRotation;
+    private float previousZKnobRotation;
+    public ImageTargetBehaviour xKnob;
+    public ImageTargetBehaviour yKnob;
+    public ImageTargetBehaviour zKnob;
+
     // Start is called before the first frame update
     void Start()
     {
         isAnObjectSelected = false;
+        previousXKnobRotation = xKnob.transform.eulerAngles.y;
+        previousYKnobRotation = yKnob.transform.eulerAngles.y;
+        previousZKnobRotation = zKnob.transform.eulerAngles.y;
+        InvokeRepeating("CheckKnobMovement", 0.5f, 0.5f); // every half second
     }
 
     // Update is called once per frame
@@ -28,16 +40,6 @@ public class SelectionBehaviourScript : MonoBehaviour
 
 
         if (isAnObjectSelected) {
-            if (Input.anyKeyDown) {
-                if (Input.GetKey(KeyCode.A)) {
-                    selectedObject.transform.Rotate(10.0f, 0.0f, 0.0f, Space.Self);
-                } else if (Input.GetKey(KeyCode.S)) {
-                    selectedObject.transform.Rotate(0.0f, 10.0f, 0.0f, Space.Self);
-                } else if (Input.GetKey(KeyCode.D)) {
-                    selectedObject.transform.Rotate(0.0f, 0.0f, 10.0f, Space.Self);
-                } 
-
-            }
             selectedRigidbody.useGravity = false;
             if (getUserTap()) {
                 selectedObject.GetComponent<Renderer>().material.color = selectedObjectOriginalMaterialColor;
@@ -48,9 +50,11 @@ public class SelectionBehaviourScript : MonoBehaviour
                 selectedObject.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
                 selectedObject.GetComponent<Rigidbody>().angularVelocity = new Vector3(0, 0, 0);
                 selectedObject.GetComponent<Rigidbody>().centerOfMass = new Vector3(0,0,0);
+
+                
             }
         } else {
-            if (isThereAHit /*&& hit.collider.gameObject.name != "NonSelectableObjects"*/) {
+            if (isThereAHit && hit.collider.gameObject.tag != "NonSelectable" && hit.collider.gameObject.tag != "Real") {
                 //print("Got a hit: " + hit.collider.gameObject.name);
                 if (getUserTap()) {
                     //print("Got a tap");
@@ -67,10 +71,38 @@ public class SelectionBehaviourScript : MonoBehaviour
                     selectedObject.transform.parent = mainCamera.transform;
                 }
             }
+        }
+    }
 
+    private void CheckKnobMovement() {
+        float currentXKnobRotation = xKnob.transform.eulerAngles.y;
+        float currentYKnobRotation = yKnob.transform.eulerAngles.y;
+        float currentZKnobRotation = zKnob.transform.eulerAngles.y;
+
+        if (isAnObjectSelected) {
+            selectedObject.transform.Rotate(amountToRotate(previousXKnobRotation, currentXKnobRotation), 0.0f, 0.0f, Space.Self);
+            selectedObject.transform.Rotate(0.0f, amountToRotate(previousYKnobRotation, currentYKnobRotation), 0.0f, Space.Self);
+            selectedObject.transform.Rotate(0.0f, 0.0f, amountToRotate(previousZKnobRotation, currentZKnobRotation), Space.Self);
         }
 
+        print("x: " + currentXKnobRotation + " " + previousXKnobRotation);
+        print("y: " + currentYKnobRotation + " " + previousYKnobRotation);
+        print("z: " + currentZKnobRotation + " " + previousZKnobRotation);
 
+        previousXKnobRotation = currentXKnobRotation;
+        previousYKnobRotation = currentYKnobRotation;
+        previousZKnobRotation = currentZKnobRotation;
+    }
+
+    private float amountToRotate(float prev, float current) {
+        // if rotation number has changed by 5 in the last half second, rotate by 10
+        if (current-prev > 5.0f /*|| (current+360)-prev > 5.0f*/) {
+            return 10.0f;
+        } else if (prev-current > 5.0f /*|| (prev+360)-current > 5.0f*/) {
+            return -10.0f;
+        } else {
+            return 0.0f;
+        }
     }
 
     private bool getUserTap() {
