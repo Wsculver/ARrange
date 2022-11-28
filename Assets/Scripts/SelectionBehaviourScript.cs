@@ -85,9 +85,9 @@ public class SelectionBehaviourScript : MonoBehaviour
             selectedObject.transform.Rotate(0.0f, 0.0f, amountToRotate(previousZKnobRotation, currentZKnobRotation), Space.Self);
         }
 
-        print("x: " + currentXKnobRotation + " " + previousXKnobRotation);
-        print("y: " + currentYKnobRotation + " " + previousYKnobRotation);
-        print("z: " + currentZKnobRotation + " " + previousZKnobRotation);
+        //print("x: " + currentXKnobRotation + " " + previousXKnobRotation);
+        //print("y: " + currentYKnobRotation + " " + previousYKnobRotation);
+        //print("z: " + currentZKnobRotation + " " + previousZKnobRotation);
 
         previousXKnobRotation = currentXKnobRotation;
         previousYKnobRotation = currentYKnobRotation;

@@ -14,7 +14,7 @@ public class RealPositioning : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        distanceThreshold = 1.5f;
+        distanceThreshold = 2.5f;
         placedCorrectly = false;
 
         controller.numObjects++;
@@ -27,14 +27,12 @@ public class RealPositioning : MonoBehaviour
         Vector3 currentPosition = this.transform.position - relativeObject.transform.position;
         float distance = Vector3.Distance(currentPosition, correctPosition);
         if(!placedCorrectly && distance <= distanceThreshold) {
-            // TODO: Increment correct object counter in controller script
             controller.correctObjectCounter++;
-            print("correct " + this.gameObject.name + " " + distance);
+            //print("correct " + this.gameObject.name + " " + distance);
             placedCorrectly = true;
         } else if(placedCorrectly && distance > distanceThreshold) {
-            // TODO: Decrement correct object counter in controller script
             controller.correctObjectCounter--;
-            print("moved " + this.gameObject.name + " " + distance);
+            //print("moved " + this.gameObject.name + " " + distance);
             placedCorrectly = false;
         }
     }
