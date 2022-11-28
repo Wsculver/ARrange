@@ -29,7 +29,7 @@ public class StartGame : MonoBehaviour
         {
             child.gameObject.SetActive(true);
             child.gameObject.GetComponent<Positioning>().ShowSolution();
-            child.gameObject.GetComponent<Rigidbody>().useGravity = true;
+            child.gameObject.GetComponent<Rigidbody>().isKinematic = true;
         }
         countdown.gameObject.GetComponent<Countdown>().BeginCountdown();
         Invoke("ScatterObjects", 15f);
@@ -40,6 +40,8 @@ public class StartGame : MonoBehaviour
         foreach (Transform child in gameObjects)
         {
             child.gameObject.GetComponent<Positioning>().Scatter();
+            child.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+            child.gameObject.GetComponent<Rigidbody>().useGravity = true;
         }
         controller.scattered = true;
     }
