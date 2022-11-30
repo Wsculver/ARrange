@@ -14,7 +14,7 @@ public class RealPositioning : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        distanceThreshold = 2.5f;
+        distanceThreshold = 4.0f;
         placedCorrectly = false;
 
         controller.numObjects++;

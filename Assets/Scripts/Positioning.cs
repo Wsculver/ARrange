@@ -18,7 +18,7 @@ public class Positioning : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        distanceThreshold = 1.5f;
+        distanceThreshold = 2.0f;
         placedCorrectly = false;
 
         if(!realClone) {
